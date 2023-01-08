@@ -185,6 +185,7 @@
     <None Remove="Constant\" />
     <None Remove="Checker\" />
     <None Remove="Checker\Model\" />
+    <None Remove="CheckerService\Model\BoardModelNS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="BlazorTest\_Imports.razor" />
@@ -201,5 +202,6 @@
     <Folder Include="Constant\" />
     <Folder Include="CheckerService\" />
     <Folder Include="CheckerService\Model\" />
+    <Folder Include="CheckerService\Model\BoardModelNS\" />
   </ItemGroup>
 </Project>
