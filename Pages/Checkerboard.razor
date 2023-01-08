@@ -19,8 +19,13 @@
 
     private void ClickWithCheckerOn(CheckerModel checker)
     {
-        var result = CheckerBlazorServer.CheckerService.CheckerService.ProbableSteps(checker.CheckerCoordinate.Row, checker.CheckerCoordinate.Column, checker.CheckerColor);
+        var result = CheckerService.ProbableSteps(checker.CheckerCoordinate.Row, checker.CheckerCoordinate.Column, checker.CheckerColor);
         selectedChecker = checker;
+        foreach (var field in CheckerService.Board)
+        {
+            field.FieldAttributes.Remove(FieldAttribute.Highlighted);
+        }
+
         foreach (var probableStep in result)
         {
             CheckerService.Board[probableStep.Row, probableStep.Column].FieldAttributes.Add(FieldAttribute.Highlighted);
@@ -28,12 +33,15 @@
         }
 
 
-
         StateHasChanged();
     }
 
     private void ClickWithoutChecker(int intendedRow, int intendedColumn)
     {
+        foreach (var field in CheckerService.Board)
+        {
+            field.FieldAttributes.Remove(FieldAttribute.Highlighted);
+        }
 
         if (selectedChecker is null)
         {

@@ -19,7 +19,7 @@ public class CheckerService : ICheckerService
 
     public void MoveChecker(CheckerModel checker, int intendedRow, int intendedColumn)
     {
-        var probableSteps = ProbableSteps(checker.CheckerCoordinate.Row, checker.CheckerCoordinate.Column, checker.CheckerColor);
+        var probableSteps = ProbableSteps(checker);
 
         var validStep = probableSteps.SingleOrDefault(coo => coo.Column == intendedColumn && coo.Row == intendedRow);
 
@@ -29,24 +29,93 @@ public class CheckerService : ICheckerService
         RelocateCheckerPosition(checker, intendedRow, intendedColumn);
     }
 
-    public static IEnumerable<CheckerCoordinate> ProbableSteps(int row, int column, CheckerColor checkerColor)
+
+    public IEnumerable<CheckerCoordinate> ProbableSteps(CheckerModel checker, bool secondTime = false)
     {
         List<CheckerCoordinate> checkerCoordinates = new List<CheckerCoordinate>();
-        if (checkerColor == CheckerColor.Black || checkerColor == CheckerColor.King)
+        checkerCoordinates.AddRange(DefaultProbabilities(checker));
+
+        var except = checkerCoordinates.Where(c => c.Row < 0 || c.Row >= Util.LENGTH || c.Column < 0 || c.Column >= Util.LENGTH);
+
+        for (int i = 0; i < checkerCoordinates.Count(); i++)
         {
-            checkerCoordinates.Add(new CheckerCoordinate(row - 1, column + 1));
-            checkerCoordinates.Add(new CheckerCoordinate(row - 1, column - 1));
-        }
-        if (checkerColor == CheckerColor.White || checkerColor == CheckerColor.King)
-        {
-            checkerCoordinates.Add(new CheckerCoordinate(row + 1, column + 1));
-            checkerCoordinates.Add(new CheckerCoordinate(row + 1, column - 1));
+            var proabableCheckerCoordinate = checkerCoordinates[i];
+
+            if (GetByCoordinate(proabableCheckerCoordinate).Checker is null)
+                continue;
+            if (!secondTime)
+            {
+
+            }
         }
 
-        var except = checkerCoordinates.Where(c => c.Row < 0 || c.Row > Util.LENGTH || c.Column < 0 || c.Column > 7);
+        foreach (var proabableCheckerCoordinate in checkerCoordinates)
+        {
+
+        }
 
         return checkerCoordinates.Except(except);
     }
+    private IEnumerable<CheckerCoordinate> DefaultProbabilities(CheckerModel checker)
+    {
+        List<CheckerCoordinate> checkerCoordinates = new List<CheckerCoordinate>();
+        if (checker.CheckerColor == CheckerColor.Black || checker.CheckerColor == CheckerColor.King)
+        {
+            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row - 1, checker.CheckerCoordinate.Column + 1));
+            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row - 1, checker.CheckerCoordinate.Column - 1));
+        }
+        if (checker.CheckerColor == CheckerColor.White || checker.CheckerColor == CheckerColor.King)
+        {
+            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column + 1));
+            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column - 1));
+        }
+        return checkerCoordinates;
+    }
+
+    private BoardField GetByCoordinate(CheckerCoordinate checkerCoordinate) => innerBoard[checkerCoordinate.Row, checkerCoordinate.Column];
+
+    private bool GenericBoundryValidator(Func<CheckerCoordinate, int> selector, CheckerCoordinate checkerModel)
+    {
+        var number = selector(checkerModel);
+
+        if (number < 0 || number >= Util.LENGTH)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private bool Validate(CheckerModel sourceField, CheckerCoordinate targetField)
+    {
+        var returnBool = true;
+
+        var result = GenericBoundryValidator(n => n.Row, targetField) && GenericBoundryValidator(n => n.Column, targetField);
+
+        if (!result)
+        {
+            return false;
+        }
+
+
+        if (sourceField.CheckerColor == CheckerColor.Black || sourceField.CheckerColor == CheckerColor.King)
+        {
+            returnBool = GenericBoundryValidator(n => n.Row, targetField) && GenericBoundryValidator(n => n.Column, targetField);
+        }
+        if (sourceField.CheckerColor == CheckerColor.White || sourceField.CheckerColor == CheckerColor.King)
+        {
+            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column + 1));
+            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column - 1));
+        }
+    }
+
+    private bool ValidateIfTargetEmpty(CheckerModel targetField)
+    {
+        if (targetField.Checker is null)
+            return false;
+        return true;
+    }
+
+
 
     private void InitializeBoard()
     {
