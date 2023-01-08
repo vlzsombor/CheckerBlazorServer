@@ -1,60 +1,102 @@
 ﻿@using CheckerBlazorServer.Constant
 @using CheckerBlazorServer.CheckerService.Model.BoardModelNS
 @using CheckerService.Model.CheckerModelNS
+@using System.Text
+@using CheckerBlazorServer.CheckerService
+
 
 @code {
-    [Parameter, EditorRequired]
-    public BoardField[,] Board { get; set; }
+
+    [Inject]
+    public ICheckerService CheckerService { get; set; }
+
+    private CheckerModel? selectedChecker;
+
+    public Checkerboard()
+    {
+
+    }
+
+    private void ClickWithCheckerOn(CheckerModel checker)
+    {
+        var result = CheckerBlazorServer.CheckerService.CheckerService.ProbableSteps(checker.CheckerCoordinate.Row, checker.CheckerCoordinate.Column, checker.CheckerColor);
+        selectedChecker = checker;
+        foreach (var probableStep in result)
+        {
+            CheckerService.Board[probableStep.Row, probableStep.Column].FieldAttributes.Add(FieldAttribute.Highlighted);
+
+        }
+
+
+
+        StateHasChanged();
+    }
+
+    private void ClickWithoutChecker(int intendedRow, int intendedColumn)
+    {
+
+        if (selectedChecker is null)
+        {
+            return;
+        }
+
+        this.CheckerService.MoveChecker(selectedChecker, intendedRow, intendedColumn);
+
+        StateHasChanged();
+    }
+
+    private string StyleForClass(HashSet<FieldAttribute> fieldAttributes)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("checker ");
+        if (fieldAttributes.Contains(FieldAttribute.Highlighted))
+            sb.Append("highlighted");
+
+        return sb.ToString();
+    }
+
 }
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-sm-7 d-flex">
             <table class="table table-bordered">
-                @for (int i = 0; i < Board.GetLength(0); i++)
+                @for (int i = 0; i < CheckerService.Board.GetLength(0); i++)
                 {
                     int localI = i;
                     <tr>
-                        @for (int j = 0; j < Board.GetLength(1); j++)
+                        @for (int j = 0; j < CheckerService.Board.GetLength(1); j++)
                         {
-                            var field = Board[i, j];
-
-                            if (field.BoardFieldType == BoardFieldType.AlwaysEmpty)
-                            {
-                                <td>
-                                    <div id="@($"cellId{i}-{j}")" class="content text-center">
-                                        x
-                                    </div>
-                                </td>
-                                continue;
-                            }
-                            if (field.Checker == null)
-                            {
-                                <td>
-                                    <div id="@($"cellId{i}-{j}")" class="content text-center">
-                                        m
-                                    </div>
-                                </td>
-                                    continue;
-                                }
-
-                                if (field.Checker.CheckerColor == CheckerColor.White)
-                                {
-                                <td>
-                                    <div id="@($"cellId{i}-{j}")" class="content text-center">
-                                        w
-                                    </div>
-                                </td>
-
-                            }
-                            if (field.Checker.CheckerColor == CheckerColor.Black)
-                            {
-                                <td>
-                                    <div id="@($"cellId{i}-{j}")" class="content text-center">
-                                        b
-                                    </div>
-                                </td>
-                            }
+                            var localJ = j;
+                            var field = CheckerService.Board[i, j];
+                            <td>
+                                <div id="@($"cellId{i}-{j}")" class="content text-center">
+                                    @if (field.BoardFieldType == BoardFieldType.AlwaysEmpty)
+                                    {
+                                        <div>
+                                            X
+                                        </div>
+                                    }
+                                    else if (field.Checker == null)
+                                    {
+                                        <div class="@(StyleForClass(field.FieldAttributes))" @onclick="()=>ClickWithoutChecker(localI, localJ)">
+                                            O
+                                        </div>
+                                    }
+                                    else if (field.Checker.CheckerColor == CheckerColor.White)
+                                    {
+                                        <div @onclick="() => ClickWithCheckerOn(field.Checker)">
+                                            w
+                                        </div>
+                                    }
+                                    else if (field.Checker.CheckerColor == CheckerColor.Black)
+                                    {
+                                        <div @onclick="() => ClickWithCheckerOn(field.Checker)">
+                                            b
+                                        </div>
+                                    }
+                                </div>
+                            </td>
 
                         }
                     </tr>

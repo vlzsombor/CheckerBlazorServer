@@ -3,5 +3,6 @@
 public enum CheckerColor 
 {
     White,
-    Black
+    Black,
+    King
 }

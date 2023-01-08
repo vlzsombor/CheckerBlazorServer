@@ -204,4 +204,9 @@
     <Folder Include="CheckerService\Model\" />
     <Folder Include="CheckerService\Model\BoardModelNS\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\css\checker.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
