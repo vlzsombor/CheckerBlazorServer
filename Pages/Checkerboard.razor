@@ -3,12 +3,14 @@
 @using CheckerService.Model.CheckerModelNS
 @using System.Text
 @using CheckerBlazorServer.CheckerService
-
+@using CheckerBlazorServer.CheckerRepositoryNS
 
 @code {
 
     [Inject]
     public ICheckerService CheckerService { get; set; }
+    [Inject]
+    public ICheckerRepository CheckerRepository { get; set; }
 
     private CheckerModel? selectedChecker;
 
@@ -21,14 +23,14 @@
     {
         var result = CheckerService.ProbableSteps(checker);
         selectedChecker = checker;
-        foreach (var field in CheckerService.Board)
+        foreach (var field in CheckerRepository.Board)
         {
             field.FieldAttributes.Remove(FieldAttribute.Highlighted);
         }
 
         foreach (var probableStep in result)
         {
-            CheckerService.Board[probableStep.Row, probableStep.Column].FieldAttributes.Add(FieldAttribute.Highlighted);
+            CheckerRepository.Board[probableStep.Row, probableStep.Column].FieldAttributes.Add(FieldAttribute.Highlighted);
 
         }
 
@@ -38,7 +40,7 @@
 
     private void ClickWithoutChecker(int intendedRow, int intendedColumn)
     {
-        foreach (var field in CheckerService.Board)
+        foreach (var field in CheckerRepository.Board)
         {
             field.FieldAttributes.Remove(FieldAttribute.Highlighted);
         }
@@ -69,14 +71,14 @@
     <div class="row justify-content-center">
         <div class="col-sm-7 d-flex">
             <table class="table table-bordered">
-                @for (int i = 0; i < CheckerService.Board.GetLength(0); i++)
+                @for (int i = 0; i < CheckerRepository.Board.GetLength(0); i++)
                 {
                     int localI = i;
                     <tr>
-                        @for (int j = 0; j < CheckerService.Board.GetLength(1); j++)
+                        @for (int j = 0; j < CheckerRepository.Board.GetLength(1); j++)
                         {
                             var localJ = j;
-                            var field = CheckerService.Board[i, j];
+                            var field = CheckerRepository.Board[i, j];
                             <td>
                                 <div id="@($"cellId{i}-{j}")" class="content text-center">
                                     @if (field.BoardFieldType == BoardFieldType.AlwaysEmpty)

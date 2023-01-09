@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using CheckerBlazorServer.Data;
 using CheckerBlazorServer.CheckerService;
+using CheckerBlazorServer.CheckerRepositoryNS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<ICheckerService, CheckerService>();
+builder.Services.AddScoped<ICheckerRepository, CheckerRepository>();
 
 var app = builder.Build();
 

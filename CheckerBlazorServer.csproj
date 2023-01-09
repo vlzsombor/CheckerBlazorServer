@@ -187,6 +187,7 @@
     <None Remove="Checker\Model\" />
     <None Remove="CheckerService\Model\BoardModelNS\" />
     <None Remove="CheckerService\Model\DirectionNS\" />
+    <None Remove="CheckerRepositoryNS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="BlazorTest\_Imports.razor" />
@@ -205,6 +206,7 @@
     <Folder Include="CheckerService\Model\" />
     <Folder Include="CheckerService\Model\BoardModelNS\" />
     <Folder Include="CheckerService\Model\DirectionNS\" />
+    <Folder Include="CheckerRepositoryNS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="wwwroot\css\checker.css">
