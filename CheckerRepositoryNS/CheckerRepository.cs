@@ -18,6 +18,16 @@ public class CheckerRepository : ICheckerRepository
     public BoardField[,] Board => innerBoard;
     private BoardField GetByCoordinate(CheckerCoordinate checkerCoordinate) => innerBoard[checkerCoordinate.Row, checkerCoordinate.Column];
 
+    public void RemoveChecker(CheckerCoordinate checkerCoordinate)
+    {
+        var field = GetBoardFieldByCoordinate(checkerCoordinate);
+        if (field is null)
+        {
+            return;
+        }
+        field.Checker = null;
+    }
+
     public BoardField? GetBoardFieldByCoordinate(CheckerCoordinate checkerCoordinate)
     {
         if (!CheckerValidation(checkerCoordinate))

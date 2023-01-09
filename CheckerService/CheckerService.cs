@@ -49,6 +49,7 @@ public class CheckerService : ICheckerService
                 newCoordinate = DirectionBase.GetNewCoordinate(i, newCoordinate);
             }
 
+
             if (!checkerRepository.CheckerValidation(newCoordinate))
                 continue;
 

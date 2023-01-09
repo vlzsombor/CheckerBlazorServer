@@ -9,6 +9,6 @@ namespace CheckerBlazorServer.CheckerRepositoryNS
         BoardField? GetBoardFieldByCoordinate(CheckerCoordinate checkerCoordinate);
         bool CheckerValidation(CheckerCoordinate checkerCoordinate);
         BoardField[,] Board { get; }
-
+        void RemoveChecker(CheckerCoordinate checkerCoordinate);
     }
 }
