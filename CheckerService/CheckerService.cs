@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Drawing;
+using CheckerBlazorServer.CheckerService.Model;
 using CheckerBlazorServer.CheckerService.Model.BoardModelNS;
 using CheckerBlazorServer.CheckerService.Model.CheckerModelNS;
+using CheckerBlazorServer.CheckerService.Model.DirectionNS;
 using CheckerBlazorServer.Constant;
 namespace CheckerBlazorServer.CheckerService;
 
@@ -16,6 +19,15 @@ public class CheckerService : ICheckerService
     public BoardField[,] Board => innerBoard;
 
 
+    private BoardField? GetBoardFieldByCoordinate(CheckerCoordinate checkerCoordinate)
+    {
+        if (!CheckerValidation(checkerCoordinate))
+        {
+            return null;
+        }
+        return innerBoard[checkerCoordinate.Row, checkerCoordinate.Column];
+    }
+
 
     public void MoveChecker(CheckerModel checker, int intendedRow, int intendedColumn)
     {
@@ -30,46 +42,72 @@ public class CheckerService : ICheckerService
     }
 
 
-    public IEnumerable<CheckerCoordinate> ProbableSteps(CheckerModel checker, bool secondTime = false)
+    public IEnumerable<CheckerCoordinate> ProbableSteps(CheckerModel checker)
     {
         List<CheckerCoordinate> checkerCoordinates = new List<CheckerCoordinate>();
-        checkerCoordinates.AddRange(DefaultProbabilities(checker));
+        checkerCoordinates.AddRange(DefaultProbableStep(checker));
 
-        var except = checkerCoordinates.Where(c => c.Row < 0 || c.Row >= Util.LENGTH || c.Column < 0 || c.Column >= Util.LENGTH);
-
-        for (int i = 0; i < checkerCoordinates.Count(); i++)
-        {
-            var proabableCheckerCoordinate = checkerCoordinates[i];
-
-            if (GetByCoordinate(proabableCheckerCoordinate).Checker is null)
-                continue;
-            if (!secondTime)
-            {
-
-            }
-        }
-
-        foreach (var proabableCheckerCoordinate in checkerCoordinates)
-        {
-
-        }
-
-        return checkerCoordinates.Except(except);
-    }
-    private IEnumerable<CheckerCoordinate> DefaultProbabilities(CheckerModel checker)
-    {
-        List<CheckerCoordinate> checkerCoordinates = new List<CheckerCoordinate>();
-        if (checker.CheckerColor == CheckerColor.Black || checker.CheckerColor == CheckerColor.King)
-        {
-            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row - 1, checker.CheckerCoordinate.Column + 1));
-            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row - 1, checker.CheckerCoordinate.Column - 1));
-        }
-        if (checker.CheckerColor == CheckerColor.White || checker.CheckerColor == CheckerColor.King)
-        {
-            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column + 1));
-            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column - 1));
-        }
         return checkerCoordinates;
+    }
+
+    private CheckerCoordinate GetNewCoordinates(CheckerDirectionEnum checkerDirectionEnum, CheckerCoordinate checkerCoordinate)
+    {
+        var field = DirectionBase.GetNewCoordinate(checkerDirectionEnum, checkerCoordinate);
+
+        return field;
+    }
+
+    private static bool CheckerValidation(CheckerCoordinate checkerCoordinate)
+    {
+        return NumberValidRule(checkerCoordinate.Row) && NumberValidRule(checkerCoordinate.Column);
+    }
+    private static bool NumberValidRule(int num)
+    {
+        return num >= 0 && num < Util.LENGTH;
+    }
+
+
+    private IEnumerable<CheckerCoordinate> DefaultProbableStep(CheckerModel checker)
+    {
+        var probableCoordinates = new HashSet<CheckerCoordinate>();
+
+        var directions = TransformColorToDirection(checker.CheckerColor);
+
+        foreach (var i in directions)
+        {
+
+            var newCoordinate = GetNewCoordinates(i, checker.CheckerCoordinate);
+
+            if (GetBoardFieldByCoordinate(newCoordinate)?.Checker != null)
+            {
+                newCoordinate = GetNewCoordinates(i, newCoordinate);
+            }
+
+            if (!CheckerValidation(newCoordinate))
+                continue;
+
+            probableCoordinates.Add(newCoordinate);
+
+        }
+
+        return probableCoordinates;
+    }
+
+    private ISet<CheckerDirectionEnum> TransformColorToDirection(CheckerColor checkerColor)
+    {
+        switch (checkerColor)
+        {
+            case CheckerColor.Black:
+                return new HashSet<CheckerDirectionEnum> { CheckerDirectionEnum.UpLeft, CheckerDirectionEnum.UpRight };
+            case CheckerColor.White:
+                return new HashSet<CheckerDirectionEnum> { CheckerDirectionEnum.DownLeft, CheckerDirectionEnum.DownRight };
+            case CheckerColor.King:
+                return TransformColorToDirection(CheckerColor.Black)
+                    .Concat(TransformColorToDirection(CheckerColor.White)).ToHashSet();
+            default:
+                break;
+        }
+        throw new ArgumentException($"{checkerColor} is unknown type");
     }
 
     private BoardField GetByCoordinate(CheckerCoordinate checkerCoordinate) => innerBoard[checkerCoordinate.Row, checkerCoordinate.Column];
@@ -84,37 +122,6 @@ public class CheckerService : ICheckerService
         }
         return true;
     }
-
-    private bool Validate(CheckerModel sourceField, CheckerCoordinate targetField)
-    {
-        var returnBool = true;
-
-        var result = GenericBoundryValidator(n => n.Row, targetField) && GenericBoundryValidator(n => n.Column, targetField);
-
-        if (!result)
-        {
-            return false;
-        }
-
-
-        if (sourceField.CheckerColor == CheckerColor.Black || sourceField.CheckerColor == CheckerColor.King)
-        {
-            returnBool = GenericBoundryValidator(n => n.Row, targetField) && GenericBoundryValidator(n => n.Column, targetField);
-        }
-        if (sourceField.CheckerColor == CheckerColor.White || sourceField.CheckerColor == CheckerColor.King)
-        {
-            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column + 1));
-            checkerCoordinates.Add(new CheckerCoordinate(checker.CheckerCoordinate.Row + 1, checker.CheckerCoordinate.Column - 1));
-        }
-    }
-
-    private bool ValidateIfTargetEmpty(CheckerModel targetField)
-    {
-        if (targetField.Checker is null)
-            return false;
-        return true;
-    }
-
 
 
     private void InitializeBoard()
@@ -161,5 +168,6 @@ public class CheckerService : ICheckerService
         innerBoard[intendedRow, intendedColumn].FieldAttributes = innerBoard[checkerModel.CheckerCoordinate.Row, checkerModel.CheckerCoordinate.Column].FieldAttributes;
 
     }
+
 }
 

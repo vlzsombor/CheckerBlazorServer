@@ -7,6 +7,6 @@ public interface ICheckerService
 {
     BoardField[,] Board { get; }
     void MoveChecker(CheckerModel checker, int intendedRow, int intendedColumn);
-    IEnumerable<CheckerCoordinate> ProbableSteps(int row, int column, CheckerColor checkerColor);
+    IEnumerable<CheckerCoordinate> ProbableSteps(CheckerModel checker);
 
 }

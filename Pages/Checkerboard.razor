@@ -19,7 +19,7 @@
 
     private void ClickWithCheckerOn(CheckerModel checker)
     {
-        var result = CheckerService.ProbableSteps(checker.CheckerCoordinate.Row, checker.CheckerCoordinate.Column, checker.CheckerColor);
+        var result = CheckerService.ProbableSteps(checker);
         selectedChecker = checker;
         foreach (var field in CheckerService.Board)
         {

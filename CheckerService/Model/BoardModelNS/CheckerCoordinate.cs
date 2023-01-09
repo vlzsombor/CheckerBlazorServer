@@ -1,4 +1,6 @@
-﻿namespace CheckerBlazorServer.CheckerService.Model.BoardModelNS;
+﻿using CheckerBlazorServer.Constant;
+
+namespace CheckerBlazorServer.CheckerService.Model.BoardModelNS;
 
 public class CheckerCoordinate
 {
