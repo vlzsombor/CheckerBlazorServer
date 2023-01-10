@@ -6,6 +6,7 @@ namespace CheckerBlazorServer.CheckerService;
 public interface ICheckerService
 {
     void MoveChecker(CheckerModel checker, int intendedRow, int intendedColumn);
-    IEnumerable<CheckerCoordinate> ProbableSteps(CheckerModel checker);
+    public IEnumerable<CheckerStep> ProbableSteps(CheckerModel checker);
+
 
 }

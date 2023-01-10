@@ -5,10 +5,10 @@ namespace CheckerBlazorServer.CheckerRepositoryNS
 {
     public interface ICheckerRepository
     {
-        void RelocateCheckerPosition(CheckerModel checkerModel, int intendedRow, int intendedColumn);
+        void RelocateCheckerPosition(CheckerModel checkerModel, CheckerStep checkerStep);
         BoardField? GetBoardFieldByCoordinate(CheckerCoordinate checkerCoordinate);
         bool CheckerValidation(CheckerCoordinate checkerCoordinate);
-        BoardField[,] Board { get; }
         void RemoveChecker(CheckerCoordinate checkerCoordinate);
+        public void RemoveHighlighted();
     }
 }

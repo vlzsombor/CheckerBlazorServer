@@ -15,7 +15,19 @@ public class CheckerRepository : ICheckerRepository
     }
 
 
-    public BoardField[,] Board => innerBoard;
+    public void RemoveHighlighted()
+    {
+
+        for (int i = 0; i < innerBoard.GetLength(0); i++)
+        {
+            for (int j = 0; j < innerBoard.GetLength(1); j++)
+            {
+                innerBoard[i,j].FieldAttributes.Remove(FieldAttribute.Highlighted);
+
+            }
+        }
+    }
+
     private BoardField GetByCoordinate(CheckerCoordinate checkerCoordinate) => innerBoard[checkerCoordinate.Row, checkerCoordinate.Column];
 
     public void RemoveChecker(CheckerCoordinate checkerCoordinate)
@@ -37,18 +49,29 @@ public class CheckerRepository : ICheckerRepository
         return innerBoard[checkerCoordinate.Row, checkerCoordinate.Column];
     }
 
-    public void RelocateCheckerPosition(CheckerModel checkerModel, int intendedRow, int intendedColumn)
+    public void RelocateCheckerPosition(CheckerModel checkerModel, CheckerStep checkerStep)
     {
-        var checker = innerBoard[checkerModel.CheckerCoordinate.Row, checkerModel.CheckerCoordinate.Column].Checker;
+        var originalCheckerField = GetBoardFieldByCoordinate(checkerModel.CheckerCoordinate);
+        var checker = originalCheckerField!.Checker;
 
-        innerBoard[checkerModel.CheckerCoordinate.Row, checkerModel.CheckerCoordinate.Column].Checker = null;
-        innerBoard[checkerModel.CheckerCoordinate.Row, checkerModel.CheckerCoordinate.Column].FieldAttributes.Clear();
+        if (originalCheckerField is null)
+        {
+            throw new ArgumentException($"Either row: {checkerModel.CheckerCoordinate.Row} or column: {checkerModel.CheckerCoordinate.Row} is invalid.");
+        }
 
-        checker!.CheckerCoordinate.Row = intendedRow;
-        checker.CheckerCoordinate.Column = intendedColumn;
+        originalCheckerField.Checker!.CheckerCoordinate = checkerStep.IntendedCoordinate;
 
-        innerBoard[intendedRow, intendedColumn].Checker = checker;
-        innerBoard[intendedRow, intendedColumn].FieldAttributes = innerBoard[checkerModel.CheckerCoordinate.Row, checkerModel.CheckerCoordinate.Column].FieldAttributes;
+        var intendedCheckerField = GetBoardFieldByCoordinate(checkerStep.IntendedCoordinate);
+
+        if(intendedCheckerField is null)
+        {
+            throw new ArgumentException($"Either row: {checkerStep.IntendedCoordinate.Row} or column: {checkerStep.IntendedCoordinate.Row} is invalid.");
+        }
+        intendedCheckerField.Checker = originalCheckerField!.Checker;
+
+
+        originalCheckerField.Checker = null;
+        originalCheckerField.FieldAttributes.Clear();
     }
 
     public bool CheckerValidation(CheckerCoordinate checkerCoordinate)
@@ -90,6 +113,7 @@ public class CheckerRepository : ICheckerRepository
             }
         }
     }
+
 
 }
 

@@ -11,7 +11,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<ICheckerService, CheckerService>();
-builder.Services.AddScoped<ICheckerRepository, CheckerRepository>();
+builder.Services.AddSingleton<ICheckerRepository, CheckerRepository>();
 
 var app = builder.Build();
 

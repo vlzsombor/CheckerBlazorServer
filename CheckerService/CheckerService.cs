@@ -24,28 +24,32 @@ public class CheckerService : ICheckerService
     {
         var probableSteps = ProbableSteps(checker);
 
-        var validStep = probableSteps.SingleOrDefault(coo => coo.Column == intendedColumn && coo.Row == intendedRow);
+        var validStep = probableSteps.SingleOrDefault(coo => coo.IntendedCoordinate.Column == intendedColumn
+        && coo.IntendedCoordinate.Row == intendedRow);
 
         if (validStep is null)
             return;
 
-        checkerRepository.RelocateCheckerPosition(checker, intendedRow, intendedColumn);
+        checkerRepository.RelocateCheckerPosition(checker, validStep);
     }
 
 
-    public IEnumerable<CheckerCoordinate> ProbableSteps(CheckerModel checker)
+    public IEnumerable<CheckerStep> ProbableSteps(CheckerModel checker)
     {
-        var probableCoordinates = new HashSet<CheckerCoordinate>();
+        var probableCoordinates = new HashSet<CheckerStep>();
 
         var directions = TransformColorToDirection(checker.CheckerColor);
 
         foreach (var i in directions)
         {
+            bool ifJump = false;
 
             var newCoordinate = DirectionBase.GetNewCoordinate(i, checker.CheckerCoordinate);
-
-            if (checkerRepository.GetBoardFieldByCoordinate(newCoordinate)?.Checker != null)
+            var jumpedChecker = checkerRepository.GetBoardFieldByCoordinate(newCoordinate)?.Checker;
+            if (jumpedChecker != null
+                && jumpedChecker.CheckerColor != checker.CheckerColor)
             {
+                ifJump = true;
                 newCoordinate = DirectionBase.GetNewCoordinate(i, newCoordinate);
             }
 
@@ -53,8 +57,7 @@ public class CheckerService : ICheckerService
             if (!checkerRepository.CheckerValidation(newCoordinate))
                 continue;
 
-            probableCoordinates.Add(newCoordinate);
-
+            probableCoordinates.Add(new CheckerStep(newCoordinate, ifJump));
         }
 
         return probableCoordinates;
@@ -88,5 +91,6 @@ public class CheckerService : ICheckerService
         }
         return true;
     }
+
 }
 

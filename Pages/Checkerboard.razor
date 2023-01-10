@@ -23,14 +23,14 @@
     {
         var result = CheckerService.ProbableSteps(checker);
         selectedChecker = checker;
-        foreach (var field in CheckerRepository.Board)
-        {
-            field.FieldAttributes.Remove(FieldAttribute.Highlighted);
-        }
+        CheckerRepository.RemoveHighlighted();
 
         foreach (var probableStep in result)
         {
-            CheckerRepository.Board[probableStep.Row, probableStep.Column].FieldAttributes.Add(FieldAttribute.Highlighted);
+            CheckerRepository
+                .GetBoardFieldByCoordinate(probableStep.IntendedCoordinate)!
+                .FieldAttributes
+                .Add(FieldAttribute.Highlighted);
         }
 
 
@@ -39,10 +39,6 @@
 
     private void ClickWithoutChecker(int intendedRow, int intendedColumn)
     {
-        foreach (var field in CheckerRepository.Board)
-        {
-            field.FieldAttributes.Remove(FieldAttribute.Highlighted);
-        }
 
         if (selectedChecker is null)
         {
@@ -50,6 +46,7 @@
         }
 
         this.CheckerService.MoveChecker(selectedChecker, intendedRow, intendedColumn);
+        CheckerRepository.RemoveHighlighted();
 
         StateHasChanged();
     }
@@ -70,14 +67,14 @@
     <div class="row justify-content-center">
         <div class="col-sm-7 d-flex">
             <table class="table table-bordered">
-                @for (int i = 0; i < CheckerRepository.Board.GetLength(0); i++)
+                @for (int i = 0; i < Util.LENGTH; i++)
                 {
                     int localI = i;
                     <tr>
-                        @for (int j = 0; j < CheckerRepository.Board.GetLength(1); j++)
+                        @for (int j = 0; j < Util.LENGTH; j++)
                         {
                             var localJ = j;
-                            var field = CheckerRepository.Board[i, j];
+                            var field = CheckerRepository.GetBoardFieldByCoordinate(new CheckerCoordinate(i, j));
                             <td>
                                 <div id="@($"cellId{i}-{j}")" class="content text-center">
                                     @if (field.BoardFieldType == BoardFieldType.AlwaysEmpty)
