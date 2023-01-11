@@ -1,7 +1,7 @@
 ﻿namespace CheckerBlazorServer.CheckerService.Model.CheckerModelNS;
 
-public enum CheckerColor 
+public enum CheckerType 
 {
-    White,
-    Black
+    Regular,
+    King
 }

@@ -22,8 +22,7 @@ public class CheckerRepository : ICheckerRepository
         {
             for (int j = 0; j < innerBoard.GetLength(1); j++)
             {
-                innerBoard[i,j].FieldAttributes.Remove(FieldAttribute.Highlighted);
-
+                innerBoard[i, j].FieldAttributes.Remove(FieldAttribute.Highlighted);
             }
         }
     }
@@ -51,8 +50,30 @@ public class CheckerRepository : ICheckerRepository
 
     public void RelocateCheckerPosition(CheckerModel checkerModel, CheckerStep checkerStep)
     {
+        if (checkerStep.ifJump)
+        {
+            var jumpedRow = (checkerModel.CheckerCoordinate.Row + checkerStep.IntendedCoordinate.Row) / 2.0;
+            var jumpedColumn = (checkerModel.CheckerCoordinate.Column + checkerStep.IntendedCoordinate.Column) / 2.0;
+            if (jumpedRow % 1 != 0 || jumpedColumn % 1 != 0)
+            {
+                throw new Exception($"{jumpedRow} or {jumpedColumn} was not even");
+            }
+
+            var jumpedField = GetBoardFieldByCoordinate(new CheckerCoordinate((int)jumpedRow, (int)jumpedColumn));
+
+            if (jumpedField is null)
+            {
+                throw new Exception($"There was no check under the jumped field Row: {jumpedRow} or Column: {jumpedColumn}");
+            }
+
+            jumpedField.Checker = null;
+        }
+
         var originalCheckerField = GetBoardFieldByCoordinate(checkerModel.CheckerCoordinate);
         var checker = originalCheckerField!.Checker;
+
+
+
 
         if (originalCheckerField is null)
         {
@@ -63,15 +84,18 @@ public class CheckerRepository : ICheckerRepository
 
         var intendedCheckerField = GetBoardFieldByCoordinate(checkerStep.IntendedCoordinate);
 
-        if(intendedCheckerField is null)
+        if (intendedCheckerField is null)
         {
             throw new ArgumentException($"Either row: {checkerStep.IntendedCoordinate.Row} or column: {checkerStep.IntendedCoordinate.Row} is invalid.");
         }
         intendedCheckerField.Checker = originalCheckerField!.Checker;
-
+        intendedCheckerField.FieldAttributes = originalCheckerField.FieldAttributes.ToHashSet();
 
         originalCheckerField.Checker = null;
         originalCheckerField.FieldAttributes.Clear();
+
+
+
     }
 
     public bool CheckerValidation(CheckerCoordinate checkerCoordinate)

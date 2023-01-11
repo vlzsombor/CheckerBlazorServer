@@ -11,7 +11,7 @@ namespace CheckerBlazorServer.CheckerService;
 public class CheckerService : ICheckerService
 {
     private readonly ICheckerRepository checkerRepository;
-
+    private readonly CheckerColor lastColor;
 
     public CheckerService(ICheckerRepository checkerRepository)
     {
@@ -38,7 +38,7 @@ public class CheckerService : ICheckerService
     {
         var probableCoordinates = new HashSet<CheckerStep>();
 
-        var directions = TransformColorToDirection(checker.CheckerColor);
+        var directions = TransformColorToDirection(checker.CheckerColor, checker.CheckerType);
 
         foreach (var i in directions)
         {
@@ -64,17 +64,19 @@ public class CheckerService : ICheckerService
 
     }
 
-    private ISet<CheckerDirectionEnum> TransformColorToDirection(CheckerColor checkerColor)
+    private ISet<CheckerDirectionEnum> TransformColorToDirection(CheckerColor checkerColor, CheckerType checkerType)
     {
+
+        if (checkerType == CheckerType.King)
+            return TransformColorToDirection(CheckerColor.Black, checkerType)
+                .Concat(TransformColorToDirection(CheckerColor.White, checkerType)).ToHashSet();
+
         switch (checkerColor)
         {
             case CheckerColor.Black:
                 return new HashSet<CheckerDirectionEnum> { CheckerDirectionEnum.UpLeft, CheckerDirectionEnum.UpRight };
             case CheckerColor.White:
                 return new HashSet<CheckerDirectionEnum> { CheckerDirectionEnum.DownLeft, CheckerDirectionEnum.DownRight };
-            case CheckerColor.King:
-                return TransformColorToDirection(CheckerColor.Black)
-                    .Concat(TransformColorToDirection(CheckerColor.White)).ToHashSet();
             default:
                 break;
         }
