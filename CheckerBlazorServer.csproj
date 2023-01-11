@@ -188,6 +188,7 @@
     <None Remove="CheckerService\Model\BoardModelNS\" />
     <None Remove="CheckerService\Model\DirectionNS\" />
     <None Remove="CheckerRepositoryNS\" />
+    <None Remove="Microsoft.AspNetCore.SignalR.Client" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="BlazorTest\_Imports.razor" />
@@ -212,5 +213,8 @@
     <Content Update="wwwroot\css\checker.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.2" />
   </ItemGroup>
 </Project>

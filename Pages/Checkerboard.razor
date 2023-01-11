@@ -4,13 +4,41 @@
 @using System.Text
 @using CheckerBlazorServer.CheckerService
 @using CheckerBlazorServer.CheckerRepositoryNS
+@using Microsoft.AspNetCore.SignalR.Client
 
 @code {
 
+    [Parameter, EditorRequired]
+    public HubConnection? hubConnection { get; set; }
     [Inject]
     public ICheckerService CheckerService { get; set; }
     [Inject]
     public ICheckerRepository CheckerRepository { get; set; }
+    [Parameter]
+    public string TableId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (hubConnection != null)
+        {
+            hubConnection.On<CheckerModel, CheckerCoordinate>("ReceiveMove", ServerMove);
+            hubConnection.On<CheckerModel, CheckerCoordinate>("ReceiveMove", (a, b) =>
+            {
+                Console.WriteLine("hello");
+            });
+        }
+    }
+    void ServerMove(CheckerModel serverChecker, CheckerCoordinate serverSteppedCoordinate)
+    {
+        CheckerService.MoveChecker(serverChecker, serverSteppedCoordinate);
+
+    }
+    private async Task Send(CheckerModel checkerModel, CheckerCoordinate checkerCoordinate)
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMove", TableId, checkerModel, checkerCoordinate);
+        }
+    }
 
     private CheckerModel? selectedChecker;
 
@@ -37,7 +65,7 @@
         StateHasChanged();
     }
 
-    private void ClickWithoutChecker(int intendedRow, int intendedColumn)
+    private async Task ClickWithoutChecker(int intendedRow, int intendedColumn)
     {
 
         if (selectedChecker is null)
@@ -45,8 +73,10 @@
             return;
         }
 
-        this.CheckerService.MoveChecker(selectedChecker, intendedRow, intendedColumn);
+        this.CheckerService.MoveChecker(selectedChecker, new CheckerCoordinate(intendedRow, intendedColumn));
         CheckerRepository.RemoveHighlighted();
+
+        await Send(selectedChecker, new CheckerCoordinate(intendedRow, intendedColumn));
 
         StateHasChanged();
     }
@@ -85,7 +115,7 @@
                                     }
                                     else if (field.Checker == null)
                                     {
-                                        <div class="@(StyleForClass(field.FieldAttributes))" @onclick="()=>ClickWithoutChecker(localI, localJ)">
+                                        <div class="@(StyleForClass(field.FieldAttributes))" @onclick="async ()=>await ClickWithoutChecker(localI, localJ)">
                                             O
                                         </div>
                                     }

@@ -12,26 +12,36 @@ public class CheckerService : ICheckerService
 {
     private readonly ICheckerRepository checkerRepository;
     private CheckerColor lastColor;
+    public static List<int> Tables = new();
 
     public CheckerService(ICheckerRepository checkerRepository)
     {
         this.checkerRepository = checkerRepository;
     }
 
-    public void MoveChecker(CheckerModel checker, int intendedRow, int intendedColumn)
+    public void AddGameTable(int tableGuid)
+    {
+        Tables.Add(tableGuid);
+    }
+
+    public void JoinTable()
+    {
+
+    }
+
+
+    public void MoveChecker(CheckerModel checker, CheckerCoordinate checkerCoordinate)
     {
         var probableSteps = ProbableSteps(checker);
 
-        var validStep = probableSteps.SingleOrDefault(coo => coo.IntendedCoordinate.Column == intendedColumn
-        && coo.IntendedCoordinate.Row == intendedRow);
+        var validStep = probableSteps.SingleOrDefault(coo =>
+            coo.IntendedCoordinate.Column == checkerCoordinate.Column
+            && coo.IntendedCoordinate.Row == checkerCoordinate.Row);
 
         if (validStep is null)
             return;
 
         checkerRepository.RelocateCheckerPosition(checker, validStep);
-
-
-
         lastColor = checker.CheckerColor;
     }
 
@@ -39,7 +49,7 @@ public class CheckerService : ICheckerService
     public IEnumerable<CheckerStep> ProbableSteps(CheckerModel checker)
     {
 
-        if(lastColor == checker.CheckerColor)
+        if (lastColor == checker.CheckerColor)
         {
             return Enumerable.Empty<CheckerStep>();
         }

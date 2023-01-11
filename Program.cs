@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using CheckerBlazorServer.Data;
 using CheckerBlazorServer.CheckerService;
 using CheckerBlazorServer.CheckerRepositoryNS;
+using Checker.Server.HubNS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<ICheckerService, CheckerService>();
-builder.Services.AddSingleton<ICheckerRepository, CheckerRepository>();
+builder.Services.AddScoped<ICheckerRepository, CheckerRepository>();
+builder.Services.AddSingleton<TableManager>();
 
 var app = builder.Build();
 
@@ -30,6 +32,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.MapBlazorHub();
+app.MapHub<MultiPlayerHub>("/multiPlayerHub");
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+

@@ -1,4 +1,53 @@
-﻿@page "/"
+﻿@using CheckerBlazorServer.CheckerService
+@using CheckerBlazorServer.CheckerRepositoryNS
+@using Microsoft.AspNetCore.SignalR.Client
+@using Checker.Server.HubNS;
+@using CheckerBlazorServer.CheckerService.Model.CheckerModelNS
+@using CheckerBlazorServer.CheckerService.Model.BoardModelNS
+@inject NavigationManager Navigation
+@inject TableManager tableManager
+
+@page "/"
+
+
+@code {
+
+    private HubConnection? hubConnection;
+    private string tableId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/multiPlayerHub"))
+            .Build();
+
+    }
+
+    async Task CreateGame()
+    {
+        await hubConnection.StartAsync();
+        this.tableId = Guid.NewGuid().ToString();
+        await hubConnection.SendAsync("JoinTable", tableId);
+        inGame = true;
+    }
+
+    async Task JoinGame(string tableId)
+    {
+        this.tableId = tableId;
+        await hubConnection.StartAsync();
+        await hubConnection.SendAsync("JoinTable", tableId);
+        inGame = true;
+
+    }
+
+
+    private bool inGame = false;
+    [Inject]
+    public ICheckerService CheckerService { get; set; }
+
+
+
+}
 
 <PageTitle>Index</PageTitle>
 
@@ -8,5 +57,17 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
+@if (inGame)
+{
+    <Checkerboard hubConnection="hubConnection"/>
+}
+else
+{
+    <button id="createGame" @onclick="CreateGame">Create Game</button>
 
-<Checkerboard></Checkerboard>
+    @foreach (string table in tableManager.Tables.Where(t => t.Value < 2).Select(x => x.Key))
+    {
+        <button id="joinTable" @onclick="()=> JoinGame(table)">Join Table @table</button>
+    }
+
+}
