@@ -11,14 +11,12 @@ namespace CheckerBlazorServer.CheckerService;
 public class CheckerService : ICheckerService
 {
     private readonly ICheckerRepository checkerRepository;
-    private readonly CheckerColor lastColor;
+    private CheckerColor lastColor;
 
     public CheckerService(ICheckerRepository checkerRepository)
     {
         this.checkerRepository = checkerRepository;
     }
-
-
 
     public void MoveChecker(CheckerModel checker, int intendedRow, int intendedColumn)
     {
@@ -31,11 +29,21 @@ public class CheckerService : ICheckerService
             return;
 
         checkerRepository.RelocateCheckerPosition(checker, validStep);
+
+
+
+        lastColor = checker.CheckerColor;
     }
 
 
     public IEnumerable<CheckerStep> ProbableSteps(CheckerModel checker)
     {
+
+        if(lastColor == checker.CheckerColor)
+        {
+            return Enumerable.Empty<CheckerStep>();
+        }
+
         var probableCoordinates = new HashSet<CheckerStep>();
 
         var directions = TransformColorToDirection(checker.CheckerColor, checker.CheckerType);
