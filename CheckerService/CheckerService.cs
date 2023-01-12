@@ -20,12 +20,12 @@ public class CheckerService : ICheckerService
     {
         int counter = 0;
         bool Result;
-        while (!tableManager.ConnectionIdIsFirst.TryGetValue(connectionId, out Result) || counter++ > 100 );
-        if(counter> 100)
+        while (!tableManager.ConnectionIdIsFirst.TryGetValue(connectionId, out Result) || counter++ > 100) ;
+        if (counter > 100)
         {
             throw new Exception();
         }
-        
+
         if (Result)
         {
             return CheckerColor.Black;
@@ -56,6 +56,12 @@ public class CheckerService : ICheckerService
             return;
 
         checkerRepository.RelocateCheckerPosition(checker, validStep);
+
+        if ((checker.CheckerCoordinate.Row == 0 && checker.CheckerType == CheckerType.Regular && checker.CheckerColor == CheckerColor.Black)
+            ||
+            checker.CheckerCoordinate.Row == Util.LENGTH && checker.CheckerType == CheckerType.Regular && checker.CheckerColor == CheckerColor.White)
+            checker.CheckerType = CheckerType.King;
+
         lastColor = checker.CheckerColor;
     }
 
@@ -100,8 +106,8 @@ public class CheckerService : ICheckerService
     {
 
         if (checkerType == CheckerType.King)
-            return TransformColorToDirection(CheckerColor.Black, checkerType)
-                .Concat(TransformColorToDirection(CheckerColor.White, checkerType)).ToHashSet();
+            return TransformColorToDirection(CheckerColor.Black, CheckerType.Regular)
+                .Concat(TransformColorToDirection(CheckerColor.White, CheckerType.Regular)).ToHashSet();
 
         switch (checkerColor)
         {

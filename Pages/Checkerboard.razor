@@ -113,22 +113,23 @@
                                     }
                                     else if (field.Checker == null)
                                     {
-                                        <div class="@(StyleForClass(field.FieldAttributes))" @onclick="async ()=>await ClickWithoutChecker(localI, localJ)">
+                                        <div class="@(StyleForClass(field.FieldAttributes))" @onclick="async () => await ClickWithoutChecker(localI, localJ)">
                                             O
                                         </div>
                                     }
-                                    else if (field.Checker.CheckerColor == CheckerColor.White)
+                                    else
                                     {
-                                        <div @onclick="() => ClickWithCheckerOn(field.Checker)">
-                                            w
+                                        <div id="cellWithChecker" @onclick="() => ClickWithCheckerOn(field.Checker)"
+                                             class="rounded-circle checker">
+
+                                            <div class="ratio ratio-1x1 rounded-circle overflow-hidden checker @field.Checker.CheckerColor">
+
+                                                <span style="position: absolute; top:50%" class="align-bottom">@(field.Checker.CheckerType == CheckerType.King ? "K" : "")</span>
+                                            </div>
                                         </div>
+
                                     }
-                                    else if (field.Checker.CheckerColor == CheckerColor.Black)
-                                    {
-                                        <div @onclick="() => ClickWithCheckerOn(field.Checker)">
-                                            b
-                                        </div>
-                                    }
+
                                 </div>
                             </td>
 
