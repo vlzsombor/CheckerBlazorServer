@@ -7,6 +7,4 @@ public interface ICheckerService
 {
     void MoveChecker(CheckerModel checker, CheckerCoordinate checkerCoordinate, string hubId);
     IEnumerable<CheckerStep> ProbableSteps(CheckerModel checker, string hubId);
-    CheckerColor GetColor(string connectionId);
-
 }

@@ -1,10 +1,9 @@
-﻿/*using System;
+﻿using System;
 using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using static System.Net.WebRequestMethods;
 using SeleniumExtras.WaitHelpers;
-using Checker.Client.Data;
 
 namespace BlazorTest.Selenium;
 
@@ -15,7 +14,7 @@ public class SeleniumTests : IDisposable
     public SeleniumTests()
     {
         driver = new Driver().GetDriver();
-        driver.Navigate().GoToUrl(new Uri("http://localhost:49835/"));
+        driver.Navigate().GoToUrl(new Uri("http://localhost:5198"));
     }
 
     [Fact]
@@ -44,9 +43,9 @@ public class SeleniumTests : IDisposable
         driver.SwitchTo().Window(driver.WindowHandles.First());
         driver.FindElement(By.Id("cellId4-1")).Click();
         driver.FindElement(By.Id("cellId2-3")).Click();
-        var black = driver.FindElements(By.ClassName("black"));
-        Assert.Equal(11, black.Count());
-        Assert.Equal(12, driver.FindElements(By.ClassName("white")).Count());
+        var white = driver.FindElements(By.ClassName("White"));
+        Assert.Equal(11, white.Count());
+        Assert.Equal(12, driver.FindElements(By.ClassName("Black")).Count());
     }
 
     [Fact]
@@ -115,5 +114,3 @@ public class SeleniumTests : IDisposable
         driver.Quit();
     }
 }
-
-*/

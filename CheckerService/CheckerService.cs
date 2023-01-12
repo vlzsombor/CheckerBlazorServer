@@ -16,7 +16,7 @@ public class CheckerService : ICheckerService
     private CheckerColor lastColor;
     public static List<int> Tables = new();
 
-    public CheckerColor GetColor(string connectionId)
+    private CheckerColor GetColor(string connectionId)
     {
         int counter = 0;
         bool Result;
