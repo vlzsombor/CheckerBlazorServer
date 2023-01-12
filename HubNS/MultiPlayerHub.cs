@@ -20,11 +20,12 @@ public class MultiPlayerHub : Hub
             if (tableManager.Tables[tableId] < 2)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-
+                
                 await Clients
                     .GroupExcept(tableId, Context.ConnectionId)
                     .SendAsync("TableJoined");
                 tableManager.Tables[tableId]++;
+                tableManager.ConnectionIdIsFirst[Context.ConnectionId] = false;
 
             }
         }
@@ -32,15 +33,14 @@ public class MultiPlayerHub : Hub
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
             tableManager.Tables.Add(tableId, 1);
+            tableManager.ConnectionIdIsFirst.Add(Context.ConnectionId, true);
         }
-
-
     }
     public async Task SendMove(string tableId, CheckerModel checkerModel, CheckerCoordinate checkerCoordinate)
     {
         await Clients
             .GroupExcept(tableId, Context.ConnectionId)
-            .SendAsync("ReceiveMove", checkerModel, checkerCoordinate);
+            .SendAsync("ReceiveMove", checkerModel, checkerCoordinate, Context.ConnectionId);
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Checker.Server.HubNS;
 using CheckerBlazorServer.CheckerRepositoryNS;
 using CheckerBlazorServer.CheckerService.Model;
 using CheckerBlazorServer.CheckerService.Model.BoardModelNS;
@@ -11,12 +12,31 @@ namespace CheckerBlazorServer.CheckerService;
 public class CheckerService : ICheckerService
 {
     private readonly ICheckerRepository checkerRepository;
+    private readonly TableManager tableManager;
     private CheckerColor lastColor;
     public static List<int> Tables = new();
 
-    public CheckerService(ICheckerRepository checkerRepository)
+    public CheckerColor GetColor(string connectionId)
+    {
+        int counter = 0;
+        bool Result;
+        while (!tableManager.ConnectionIdIsFirst.TryGetValue(connectionId, out Result) || counter++ > 100 );
+        if(counter> 100)
+        {
+            throw new Exception();
+        }
+        
+        if (Result)
+        {
+            return CheckerColor.Black;
+        }
+        return CheckerColor.White;
+    }
+
+    public CheckerService(ICheckerRepository checkerRepository, TableManager tableManager)
     {
         this.checkerRepository = checkerRepository;
+        this.tableManager = tableManager;
     }
 
     public void AddGameTable(int tableGuid)
@@ -24,15 +44,9 @@ public class CheckerService : ICheckerService
         Tables.Add(tableGuid);
     }
 
-    public void JoinTable()
+    public void MoveChecker(CheckerModel checker, CheckerCoordinate checkerCoordinate, string hubId)
     {
-
-    }
-
-
-    public void MoveChecker(CheckerModel checker, CheckerCoordinate checkerCoordinate)
-    {
-        var probableSteps = ProbableSteps(checker);
+        var probableSteps = ProbableSteps(checker, hubId);
 
         var validStep = probableSteps.SingleOrDefault(coo =>
             coo.IntendedCoordinate.Column == checkerCoordinate.Column
@@ -46,10 +60,10 @@ public class CheckerService : ICheckerService
     }
 
 
-    public IEnumerable<CheckerStep> ProbableSteps(CheckerModel checker)
+    public IEnumerable<CheckerStep> ProbableSteps(CheckerModel checker, string hubId)
     {
-
-        if (lastColor == checker.CheckerColor)
+        var checkerColor = GetColor(hubId);
+        if (checkerColor != checker.CheckerColor || lastColor == checker.CheckerColor)
         {
             return Enumerable.Empty<CheckerStep>();
         }
@@ -111,6 +125,5 @@ public class CheckerService : ICheckerService
         }
         return true;
     }
-
 }
 

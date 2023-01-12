@@ -20,16 +20,12 @@
     {
         if (hubConnection != null)
         {
-            hubConnection.On<CheckerModel, CheckerCoordinate>("ReceiveMove", ServerMove);
-            hubConnection.On<CheckerModel, CheckerCoordinate>("ReceiveMove", (a, b) =>
-            {
-                Console.WriteLine("hello");
-            });
+            hubConnection.On<CheckerModel, CheckerCoordinate, string>("ReceiveMove", ServerMove);
         }
     }
-    async Task ServerMove(CheckerModel serverChecker, CheckerCoordinate serverSteppedCoordinate)
+    async Task ServerMove(CheckerModel serverChecker, CheckerCoordinate serverSteppedCoordinate, string serverId)
     {
-        CheckerService.MoveChecker(serverChecker, serverSteppedCoordinate);
+        CheckerService.MoveChecker(serverChecker, serverSteppedCoordinate, serverId);
         await InvokeAsync(StateHasChanged);
     }
     private async Task Send(CheckerModel checkerModel, CheckerCoordinate checkerCoordinate)
@@ -49,7 +45,7 @@
 
     private void ClickWithCheckerOn(CheckerModel checker)
     {
-        var result = CheckerService.ProbableSteps(checker);
+        var result = CheckerService.ProbableSteps(checker, hubConnection.ConnectionId);
         selectedChecker = checker;
         CheckerRepository.RemoveHighlighted();
 
@@ -76,7 +72,7 @@
         await Send(selectedChecker, new CheckerCoordinate(intendedRow, intendedColumn));
 
 
-        this.CheckerService.MoveChecker(selectedChecker, new CheckerCoordinate(intendedRow, intendedColumn));
+        this.CheckerService.MoveChecker(selectedChecker, new CheckerCoordinate(intendedRow, intendedColumn), hubConnection.ConnectionId);
         CheckerRepository.RemoveHighlighted();
 
 

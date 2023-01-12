@@ -8,6 +8,7 @@ public class CheckerModel
     public CheckerType CheckerType { get; set; } = CheckerType.Regular;
 
     public CheckerCoordinate CheckerCoordinate { get; set; }
+
     public CheckerModel(CheckerColor checkerColor, CheckerCoordinate checkerCoordinate)
     {
         CheckerColor = checkerColor;

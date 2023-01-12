@@ -15,6 +15,7 @@
     private HubConnection? hubConnection;
     private string tableId;
 
+
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
@@ -59,7 +60,7 @@ Welcome to your new app.
 
 @if (inGame)
 {
-    <Checkerboard hubConnection="hubConnection" TableId="@tableId"/>
+    <Checkerboard hubConnection="hubConnection" TableId="@tableId" />
 }
 else
 {
