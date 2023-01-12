@@ -21,7 +21,9 @@ public class MultiPlayerHub : Hub
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
 
-                await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("TableJoined");
+                await Clients
+                    .GroupExcept(tableId, Context.ConnectionId)
+                    .SendAsync("TableJoined");
                 tableManager.Tables[tableId]++;
 
             }
@@ -37,8 +39,7 @@ public class MultiPlayerHub : Hub
     public async Task SendMove(string tableId, CheckerModel checkerModel, CheckerCoordinate checkerCoordinate)
     {
         await Clients
-            .All
-            //.GroupExcept(tableId, Context.ConnectionId)
+            .GroupExcept(tableId, Context.ConnectionId)
             .SendAsync("ReceiveMove", checkerModel, checkerCoordinate);
     }
 
