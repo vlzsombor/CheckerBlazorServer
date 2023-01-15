@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  checkerblazorserver:
+    image: ${DOCKER_REGISTRY-}checkerblazorserver
+    build:
+      context: .
+      dockerfile: ./Dockerfile
