@@ -107,9 +107,7 @@
                                 <div id="@($"cellId{i}-{j}")" class="content text-center">
                                     @if (field.BoardFieldType == BoardFieldType.AlwaysEmpty)
                                     {
-                                        <div>
-                                            X
-                                        </div>
+
                                     }
                                     else if (field.Checker == null)
                                     {
@@ -127,9 +125,7 @@
                                                 <span style="position: absolute; top:50%" class="align-bottom">@(field.Checker.CheckerType == CheckerType.King ? "K" : "")</span>
                                             </div>
                                         </div>
-
                                     }
-
                                 </div>
                             </td>
 

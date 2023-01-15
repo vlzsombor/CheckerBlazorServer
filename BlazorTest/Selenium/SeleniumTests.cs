@@ -103,6 +103,14 @@ public class SeleniumTests : IDisposable
         driver.FindElement(By.Id("cellId2-3")).Click();
         driver.FindElement(By.Id("cellId0-5")).Click();
 
+        driver.SwitchTo().Window(driver.WindowHandles.Last());
+        driver.FindElement(By.Id("cellId2-1")).Click();
+        driver.FindElement(By.Id("cellId3-")).Click();
+
+        driver.SwitchTo().Window(driver.WindowHandles.First());
+        driver.FindElement(By.Id("cellId0-5")).Click();
+        driver.FindElement(By.Id("cellId2-3")).Click();
+
         var row = driver.FindElement(By.Id("cellId0-5"));
         var span = row.FindElement(By.TagName("span"));
         Assert.NotNull(span);
