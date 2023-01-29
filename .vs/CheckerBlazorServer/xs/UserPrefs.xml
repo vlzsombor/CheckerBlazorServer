@@ -1,0 +1,49 @@
+﻿<Properties GitUserInfo="UsingGIT" StartupConfiguration="{ADF098ED-10A9-4E71-8F20-04523E649C1C}|http">
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.CheckerBlazorServer PreferredExecutionTarget="/Applications/Microsoft Edge.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/BUnit/CheckerTest.cs" relfile="BlazorTest/BUnit/CheckerTest.cs" line="40" column="1" />
+      <Breakpoint file="/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/Selenium/SeleniumTests.cs" relfile="BlazorTest/Selenium/SeleniumTests.cs" line="47" column="1" />
+      <Breakpoint file="/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/Selenium/SeleniumTests.cs" relfile="BlazorTest/Selenium/SeleniumTests.cs" line="116" column="1" />
+      <Breakpoint file="/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/Selenium/SeleniumTests.cs" relfile="BlazorTest/Selenium/SeleniumTests.cs" line="106" column="1" />
+      <Breakpoint file="/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/Program.cs" relfile="Program.cs" line="35" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.docker-compose PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="BlazorTest/BUnit/CheckerTest.cs">
+    <Files>
+      <File FileName="CheckerBlazorSolution/Program.cs" />
+      <File FileName="BlazorTest/BUnit/CheckerTest.cs" Line="4" Column="19" />
+      <File FileName="CheckerBlazorSolution/Pages/Checkerboard.razor" />
+      <File FileName="CheckerBlazorSolution/Pages/_Host.cshtml" />
+      <File FileName="CheckerBlazorSolution/App.razor" />
+      <File FileName="CheckerBlazorSolution/Data/WeatherForecast.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="CheckerBlazorServer" expanded="True">
+            <Node name="BlazorTest" expanded="True" selected="True">
+              <Node name="BUnit" expanded="True" />
+            </Node>
+            <Node name="CheckerBlazorServer" expanded="True">
+              <Node name="Data" expanded="True" />
+              <Node name="Pages" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="CheckerBlazorServer" expanded="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+</Properties>

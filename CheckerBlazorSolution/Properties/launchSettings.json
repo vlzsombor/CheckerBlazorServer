@@ -34,7 +34,7 @@
     "CheckerBlazorServer": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:4663;http://localhost:57662",
+      "applicationUrl": "https://localhost:40263;http://localhost:12523",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

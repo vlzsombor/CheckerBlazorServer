@@ -191,6 +191,12 @@
     <None Remove="CheckerService\Model\DirectionNS\" />
     <None Remove="CheckerRepositoryNS\" />
     <None Remove="Microsoft.AspNetCore.SignalR.Client" />
+    <None Remove="Microsoft.EntityFrameworkCore.Tools" />
+    <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
+    <None Remove="Microsoft.EntityFrameworkCore" />
+    <None Remove="Database\" />
+    <None Remove="Database\Dtos\" />
+    <None Remove="System.ComponentModel.Annotations" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="BlazorTest\_Imports.razor" />
@@ -210,6 +216,8 @@
     <Folder Include="CheckerService\Model\BoardModelNS\" />
     <Folder Include="CheckerService\Model\DirectionNS\" />
     <Folder Include="CheckerRepositoryNS\" />
+    <Folder Include="Database\" />
+    <Folder Include="Database\Dtos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="wwwroot\css\checker.css">
@@ -218,5 +226,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 </Project>
