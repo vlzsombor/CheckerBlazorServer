@@ -1,8 +1,0 @@
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/bin/Debug/net7.0/CoverletSourceRootsMapping
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/obj/Debug/net7.0/BlazorTest.csproj.AssemblyReference.cache
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/obj/Debug/net7.0/BlazorTest.GeneratedMSBuildEditorConfig.editorconfig
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/obj/Debug/net7.0/BlazorTest.AssemblyInfoInputs.cache
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/obj/Debug/net7.0/BlazorTest.AssemblyInfo.cs
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/obj/Debug/net7.0/BlazorTest.csproj.CoreCompileInputs.cache
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/obj/Debug/net7.0/BlazorTest.MvcApplicationPartsAssemblyInfo.cs
-/Users/zsomborveres-lakos/Projects/CheckerBlazorServer/BlazorTest/obj/Debug/net7.0/BlazorTest.MvcApplicationPartsAssemblyInfo.cache
