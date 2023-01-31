@@ -1,0 +1,23 @@
+﻿@page
+@model CheckerBlazorServer.Areas.Identity.Pages.Account.LoginModel
+<div>
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post">
+                <h2>User local acc to login</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating" style="margin:10px">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+
+                </div>
+                <div class="form-floating" style="margin:10px">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                </div>
+                <div style="margin:10px">
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

@@ -187,8 +187,6 @@
     <None Remove="Constant\" />
     <None Remove="Checker\" />
     <None Remove="Checker\Model\" />
-    <None Remove="CheckerService\Model\BoardModelNS\" />
-    <None Remove="CheckerService\Model\DirectionNS\" />
     <None Remove="CheckerRepositoryNS\" />
     <None Remove="Microsoft.AspNetCore.SignalR.Client" />
     <None Remove="Microsoft.EntityFrameworkCore.Tools" />
@@ -198,6 +196,14 @@
     <None Remove="Database\Dtos\" />
     <None Remove="System.ComponentModel.Annotations" />
     <None Remove="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <None Remove="Services\" />
+    <None Remove="Services\Authentication\" />
+    <None Remove="Services\CheckerService\" />
+    <None Remove="InitConfig\" />
+    <None Remove="Areas\" />
+    <None Remove="Areas\Identity\" />
+    <None Remove="Areas\Identity\Pages\" />
+    <None Remove="Areas\Identity\Pages\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="BlazorTest\_Imports.razor" />
@@ -212,13 +218,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Constant\" />
-    <Folder Include="CheckerService\" />
-    <Folder Include="CheckerService\Model\" />
-    <Folder Include="CheckerService\Model\BoardModelNS\" />
-    <Folder Include="CheckerService\Model\DirectionNS\" />
     <Folder Include="CheckerRepositoryNS\" />
     <Folder Include="Database\" />
     <Folder Include="Database\Dtos\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\Authentication\" />
+    <Folder Include="Services\CheckerService\" />
+    <Folder Include="InitConfig\" />
+    <Folder Include="Areas\" />
+    <Folder Include="Areas\Identity\" />
+    <Folder Include="Areas\Identity\Pages\" />
+    <Folder Include="Areas\Identity\Pages\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="wwwroot\css\checker.css">
@@ -226,6 +236,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -237,5 +248,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
   </ItemGroup>
 </Project>

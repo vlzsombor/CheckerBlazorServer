@@ -10,8 +10,14 @@
     <main>
         <div class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <NavLink id="login" href="./login">Login</NavLink><br />
+            <CascadingAuthenticationState>
+                <AuthorizeView>
+                    <h1>Hello, @context.User.Identity.Name!</h1>
+                    <p>You can only see this content if you're authenticated.</p>
+                </AuthorizeView>
+            </CascadingAuthenticationState>
         </div>
-
         <article class="content px-4">
             @Body
         </article>

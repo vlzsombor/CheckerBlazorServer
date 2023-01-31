@@ -1,0 +1,16 @@
+﻿@inject CheckerBlazorServer.Services.Authentication.AuthenticationService authenticaitonService
+@page "/login"
+
+<h1>hello2</h1>
+<button @onclick="click">click2</button>
+
+
+@code  {
+
+    public async Task click()
+    {
+        await authenticaitonService.Login("a@a.hu", "Aa123456!");
+    }
+
+
+}
