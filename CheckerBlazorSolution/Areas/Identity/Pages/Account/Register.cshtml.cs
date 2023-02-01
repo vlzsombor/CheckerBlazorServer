@@ -57,7 +57,7 @@ namespace CheckerBlazorServer.Areas.Identity.Pages.Account
             [EmailAddress]
             public string Email { get; set; }
             [Required]
-            [EmailAddress]
+            [DataType(DataType.Password)]
             public string Password { get; set; }
         }
     }
