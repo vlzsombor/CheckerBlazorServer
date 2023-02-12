@@ -5,7 +5,7 @@
 @using CheckerBlazorServer.CheckerService
 @using CheckerBlazorServer.CheckerRepositoryNS
 @using Microsoft.AspNetCore.SignalR.Client
-
+@page "/game/{TableId}"
 @code {
 
     [Parameter, EditorRequired]
@@ -14,10 +14,19 @@
     public ICheckerService CheckerService { get; set; }
     [Inject]
     public ICheckerRepository CheckerRepository { get; set; }
-    [Parameter, EditorRequired]
+    [Parameter]
     public string TableId { get; set; }
+    @inject NavigationManager NavigationManager
+
+
+
     protected override async Task OnInitializedAsync()
     {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/multiPlayerHub"))
+            .Build();
+        await hubConnection.StartAsync();
+        await hubConnection.SendAsync("JoinTable", TableId);
         if (hubConnection != null)
         {
             hubConnection.On<CheckerModel, CheckerCoordinate, string>("ReceiveMove", ServerMove);
@@ -38,10 +47,6 @@
 
     private CheckerModel? selectedChecker;
 
-    public Checkerboard()
-    {
-
-    }
 
     private void ClickWithCheckerOn(CheckerModel checker)
     {
@@ -118,7 +123,7 @@
                                     else
                                     {
                                         <div id="cellWithChecker" @onclick="() => ClickWithCheckerOn(field.Checker)"
-                                             class="rounded-circle checker">
+                                 class="rounded-circle checker">
 
                                             <div class="ratio ratio-1x1 rounded-circle overflow-hidden checker @field.Checker.CheckerColor">
 

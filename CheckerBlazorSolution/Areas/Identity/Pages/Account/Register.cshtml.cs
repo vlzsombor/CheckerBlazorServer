@@ -30,9 +30,6 @@ namespace CheckerBlazorServer.Areas.Identity.Pages.Account
             _userManager = userManager;
         }
 
-
-
-
         public async Task<IActionResult> OnPostAsync()
         {
             ReturnUrl = Url.Content("~/");

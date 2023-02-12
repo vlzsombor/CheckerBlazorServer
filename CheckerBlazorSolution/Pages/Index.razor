@@ -4,7 +4,7 @@
 @using Checker.Server.HubNS;
 @using CheckerBlazorServer.CheckerService.Model.CheckerModelNS
 @using CheckerBlazorServer.CheckerService.Model.BoardModelNS
-@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
 @inject TableManager tableManager
 
 @page "/"
@@ -19,28 +19,35 @@
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/multiPlayerHub"))
+            .WithUrl(NavigationManager.ToAbsoluteUri("/multiPlayerHub"))
             .Build();
 
     }
 
-    async Task CreateGame()
+    //async Task CreateGame()
+    //{
+    //    await hubConnection.StartAsync();
+    //    this.tableId = Guid.NewGuid().ToString();
+    //    await hubConnection.SendAsync("JoinTable", tableId);
+    //    inGame = true;
+    //    Navigate(tableId);
+
+    //}
+
+    //async Task JoinGame(string tableId)
+    //{
+    //    this.tableId = tableId;
+    //    await hubConnection.StartAsync();
+    //    await hubConnection.SendAsync("JoinTable", tableId);
+    //    inGame = true;
+    //    Navigate(tableId);
+    //}
+
+
+    void Navigate(string tableId)
     {
-        await hubConnection.StartAsync();
-        this.tableId = Guid.NewGuid().ToString();
-        await hubConnection.SendAsync("JoinTable", tableId);
-        inGame = true;
+        NavigationManager.NavigateTo($"./game/{tableId}");
     }
-
-    async Task JoinGame(string tableId)
-    {
-        this.tableId = tableId;
-        await hubConnection.StartAsync();
-        await hubConnection.SendAsync("JoinTable", tableId);
-        inGame = true;
-
-    }
-
 
     private bool inGame = false;
     [Inject]
@@ -51,15 +58,15 @@
 }
 @if (inGame)
 {
-    <Checkerboard hubConnection="hubConnection" TableId="@tableId" />
+    @*<Checkerboard hubConnection="hubConnection" />*@
 }
 else
 {
-    <button id="createGame" @onclick="CreateGame">Create Game</button>
+    <button id="createGame" @onclick="()=>Navigate(Guid.NewGuid().ToString())">Create Game</button>
 
     @foreach (string table in tableManager.Tables.Where(t => t.Value < 2).Select(x => x.Key))
     {
-        <button id="joinTable" @onclick="()=> JoinGame(table)">Join Table @table</button>
+        <button id="joinTable" @onclick="()=>Navigate(table)">Join Table @table</button>
     }
 
 }
