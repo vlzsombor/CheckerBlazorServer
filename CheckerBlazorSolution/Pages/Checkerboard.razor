@@ -5,11 +5,26 @@
 @using CheckerBlazorServer.CheckerService
 @using CheckerBlazorServer.CheckerRepositoryNS
 @using Microsoft.AspNetCore.SignalR.Client
+@using System.Text.Json;
+
 @page "/game/{TableId}"
+
+@implements IAsyncDisposable
+
 @code {
 
-    [Parameter, EditorRequired]
-    public HubConnection? hubConnection { get; set; }
+    public async ValueTask DisposeAsync()
+    {
+
+        var to = CheckerRepository.InnerBoard.Cast<BoardField>().ToArray();
+
+
+        string jsonString = JsonSerializer.Serialize(to);
+
+        await hubConnection.SendAsync("DisconnectAsync", TableId, to);
+    }
+
+    public HubConnection hubConnection { get; set; }
     [Inject]
     public ICheckerService CheckerService { get; set; }
     [Inject]
@@ -30,7 +45,32 @@
         if (hubConnection != null)
         {
             hubConnection.On<CheckerModel, CheckerCoordinate, string>("ReceiveMove", ServerMove);
+            hubConnection.On<BoardField[]>("TableJoined", JoinInit);
         }
+        await Task.Delay(1000);
+    }
+    async Task JoinInit(BoardField[]? checkerboards)
+    {
+        if (checkerboards is null)
+        {
+            return;
+        }
+
+        var tableOfObject = new BoardField[8,8];
+        // create arrays to put in the array of arrays
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                var item = checkerboards[i * 8 + j];
+                var a = CheckerRepository.GetBoardFieldByCoordinate(new CheckerCoordinate(i, j));
+                a.Checker = item.Checker;
+                a.BoardFieldType = item.BoardFieldType;
+                a.FieldAttributes = item.FieldAttributes;
+            }
+        }
+
+        await InvokeAsync(StateHasChanged);
     }
     async Task ServerMove(CheckerModel serverChecker, CheckerCoordinate serverSteppedCoordinate, string serverId)
     {
