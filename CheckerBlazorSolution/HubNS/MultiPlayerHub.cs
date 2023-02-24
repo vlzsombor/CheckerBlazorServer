@@ -37,8 +37,6 @@ public class MultiPlayerHub : Hub
 
             var a = tableManager.TableState.TryGetValue(tableId, out var values);
 
-
-
             await Clients.Group(tableId)
                 //.GroupExcept(tableId, Context.ConnectionId)
                 .SendAsync("TableJoined", values);
@@ -49,21 +47,6 @@ public class MultiPlayerHub : Hub
 
     public async Task DisconnectAsync(string tableId, BoardField[] innerBoard)
     {
-        //if (tableManager.Tables.ContainsKey(tableId))
-        //{
-        //    await Groups.RemoveFromGroupAsync(Context.ConnectionId, tableId);
-        //    tableManager.Tables[tableId]--;
-        //}
-
-
-
-        //if (!tableManager.Tables.ContainsKey(tableId))
-        //{
-        //    await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-        //    tableManager.Tables.Add(tableId, 1);
-        //    tableManager.ConnectionIdIsFirst.Add(Context.ConnectionId, true);
-        //    return;
-        //}
         tableManager.ConnectionIdIsFirst.Remove(Context.ConnectionId);
         if (tableManager.Tables[tableId] == 1)
         {

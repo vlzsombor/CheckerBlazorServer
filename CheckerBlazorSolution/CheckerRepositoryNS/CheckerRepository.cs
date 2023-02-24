@@ -2,18 +2,26 @@
 using CheckerBlazorServer.CheckerService.Model.BoardModelNS;
 using CheckerBlazorServer.CheckerService.Model.CheckerModelNS;
 using CheckerBlazorServer.Constant;
+using CheckerBlazorServer.Database;
 
 namespace CheckerBlazorServer.CheckerRepositoryNS;
 
 public class CheckerRepository : ICheckerRepository
 {
-    public BoardField[,] InnerBoard { get; set; } = new BoardField[Util.LENGTH, Util.LENGTH];
+    private readonly ApplicationDbContext applicationDbContext;
 
-    public CheckerRepository()
+//    public BoardField[,] InnerBoard { get; set; } = new BoardField[Util.LENGTH, Util.LENGTH];
+
+    public CheckerRepository(ApplicationDbContext applicationDbContext)
     {
+        this.applicationDbContext = applicationDbContext;
         InitializeBoard();
     }
 
+    private BoardField[,] LoadInnerBoard(string tableId)
+    {
+        return applicationDbContext.BoardDto.Single(x => x.TableId == tableId).TableJson;
+    }
 
     public void RemoveHighlighted()
     {

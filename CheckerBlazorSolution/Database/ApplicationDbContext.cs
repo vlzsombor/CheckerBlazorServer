@@ -7,7 +7,7 @@ namespace CheckerBlazorServer.Database;
 
 public class ApplicationDbContext : IdentityDbContext
 {
-    public DbSet<TestDto> Test { get; set; }
+    public DbSet<BoardDto> BoardDto { get; set; }
 
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
